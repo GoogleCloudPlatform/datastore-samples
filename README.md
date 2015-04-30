@@ -1,25 +1,12 @@
 ## datastore-samples
 
-Sample code documenting usage of [Appengine Datastore](https://cloud.google.com/datastore/docs/concepts/overview) using the [NDB Datastore API](https://cloud.google.com/appengine/docs/python/ndb/).
+Sample code documenting usage of [Appengine Datastore](https://cloud.google.com/datastore/docs/concepts/overview).
 
+# Python
 
-[![Build Status](https://travis-ci.org/GoogleCloudPlatform/datastore-samples.svg)](https://travis-ci.org/GoogleCloudPlatform/datastore-samples)
-
-## Setup
-
-1. [Setup an Appengine project](https://console.developers.google.com/start/appengine) if you haven't already.
-1. Install the dependencies:
-
-
-## Run
-
-### Python
-
-From the `python/appengine/` directory, run
-```sh
-pip install -r requirements.txt -t lib/
-gcloud preview app run .
-```
+|    |   |
+| ------------- | ------------- |
+| [ndb-overview](python/ndb-overview)   | Overview of the Python NDB datastore API.  |
 
 ## Contributing changes
 
