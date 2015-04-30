@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START all]
 import cgi
 import urllib
 
@@ -20,11 +21,14 @@ import webapp2
 from google.appengine.ext import ndb
 
 
+# [START greeting]
 class Greeting(ndb.Model):
     """Models an individual Guestbook entry with content and date."""
     content = ndb.StringProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
+# [END greeting]
 
+# [START query]
     @classmethod
     def query_book(cls, ancestor_key):
         return cls.query(ancestor=ancestor_key).order(-cls.date)
@@ -37,11 +41,12 @@ class MainPage(webapp2.RequestHandler):
         ancestor_key = ndb.Key("Book", guestbook_name or "*notitle*")
         greetings = Greeting.query_book(ancestor_key).fetch(20)
 
-    for greeting in greetings:
-        self.response.out.write('<blockquote>%s</blockquote>' %
-                                cgi.escape(greeting.content))
+        for greeting in greetings:
+            self.response.out.write('<blockquote>%s</blockquote>' %
+                                    cgi.escape(greeting.content))
+# [END query]
 
-    self.response.out.write("""
+        self.response.out.write("""
           <form action="/sign?%s" method="post">
             <div><textarea name="content" rows="3" cols="60"></textarea></div>
             <div><input type="submit" value="Sign Guestbook"></div>
@@ -54,6 +59,7 @@ class MainPage(webapp2.RequestHandler):
                     cgi.escape(guestbook_name)))
 
 
+# [START submit]
 class SubmitForm(webapp2.RequestHandler):
     def post(self):
         # We set the parent key on each 'Greeting' to ensure each guestbook's
@@ -62,6 +68,7 @@ class SubmitForm(webapp2.RequestHandler):
         greeting = Greeting(parent=ndb.Key("Book", guestbook_name or "*notitle*"),
                             content=self.request.get('content'))
         greeting.put()
+# [END submit]
         self.redirect('/?' + urllib.urlencode({'guestbook_name': guestbook_name}))
 
 
@@ -69,3 +76,4 @@ app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/sign', SubmitForm)
 ])
+# [END all]
