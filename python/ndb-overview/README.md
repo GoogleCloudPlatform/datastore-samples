@@ -16,7 +16,7 @@ scaffolding for other python frameworks and use cases.
    gcloud config set project <your-app-id>
    ```
    You don't need a valid app-id to run locally, but will need a valid id to deploy below.
-   
+
 1. Clone this repo.
 
    ```
