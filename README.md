@@ -8,11 +8,18 @@ Sample code documenting usage of [Appengine Datastore](https://cloud.google.com/
 ## Setup
 
 1. [Setup an Appengine project](https://console.developers.google.com/start/appengine) if you haven't already.
+1. Install the dependencies:
+
 
 ## Run
 
 ### Python
 
+From the `python/appengine/` directory, run
+```sh
+pip install -r requirements.txt -t lib/
+gcloud preview app run .
+```
 
 ## Contributing changes
 
