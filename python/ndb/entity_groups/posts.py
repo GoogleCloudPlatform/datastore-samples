@@ -21,14 +21,14 @@ class Post(ndb.Model):
 
 
 def make_post(user_id, post_text):
-    """ put a post made by the given user, with the given test in datastore"""
+    """ Puts a Post in datastore"""
     post = Post(key=ndb.Key('User', user_id, 'Post'), 
             content = post_text)
     post.put()
 
 
 def get_posts(since=datetime.min):
-    """ Retrieve all posts since specified datetime. """ 
+    """ Retrieves all posts since specified datetime. """ 
     """ eventually consistent """
     return Account.query(Account.posted >= since).order(-Account.posted)
 
