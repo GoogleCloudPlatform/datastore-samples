@@ -16,7 +16,10 @@ import cgi
 import flask
 import random
 import urllib
+# [START taskq-imp]
 from google.appengine.ext import ndb
+from google.appengine.api import taskqueue
+# [END taskq-imp]
 
 
 class Note(ndb.Model):
@@ -74,6 +77,7 @@ def insert_if_absent(note_key, note):
 # [START two-tries]
 @ndb.transactional(retries=1)
 def insert_if_absent_2_retries(note_key, note):
+    # do insert
     # [END two-tries]
     fetch = note_key.get()
     if fetch is None:
@@ -85,6 +89,7 @@ def insert_if_absent_2_retries(note_key, note):
 # [START cross-group]
 @ndb.transactional(xg=True)
 def insert_if_absent_xg(note_key, note):
+    # do insert
     # [END cross-group]
     fetch = note_key.get()
     if fetch is None:
@@ -95,6 +100,7 @@ def insert_if_absent_xg(note_key, note):
 
 # [START sometimes]
 def insert_if_absent_sometimes(note_key, note):
+    # do insert
     # [END sometimes]
     fetch = note_key.get()
     if fetch is None:
@@ -106,6 +112,7 @@ def insert_if_absent_sometimes(note_key, note):
 # [START indep]
 @ndb.transactional(propagation=ndb.TransactionOptions.INDEPENDENT)
 def insert_if_absent_indep(note_key, note):
+    # do insert
     # [END indep]
     fetch = note_key.get()
     if fetch is None:
@@ -113,23 +120,42 @@ def insert_if_absent_indep(note_key, note):
         return True
     return False
 
+# [START taskq]
+@ndb.transactional
+def insert_if_absent_taskq(note_key, note):
+    taskqueue.add(url=flask.url_for('taskq_worker'), transactional=True)
+    # do insert
+    # [END taskq]
+    fetch = note_key.get()
+    if fetch is None:
+        note.put()
+        return True
+    return False
+
+
+@app.route('/worker')
+def taskq_worker():
+    pass
 
 def pick_random_insert(note_key, note):
-    choice = random.randint(0, 4)
+    choice = random.randint(0, 5)
     if choice == 0:
         # [START calling2]
-        return insert_if_absent(note_key, note)
+        inserted = insert_if_absent(note_key, note)
         # [END calling2]
     elif choice == 1:
-        return insert_if_absent_2_retries(note_key, note)
+        inserted = insert_if_absent_2_retries(note_key, note)
     elif choice == 2:
-        return insert_if_absent_xg(note_key, note)
+        inserted = insert_if_absent_xg(note_key, note)
     elif choice == 3:
         # [START sometimes-call]
-        return ndb.transaction(lambda: insert_if_absent_sometimes(note_key, note))
+        inserted = ndb.transaction(lambda: insert_if_absent_sometimes(note_key, note))
         # [END sometimes-call]
     elif choice == 4:
-        return insert_if_absent_indep(note_key, note)
+        inserted = insert_if_absent_indep(note_key, note)
+    elif choice == 5:
+        inserted = insert_if_absent_taskq(note_key, note)
+    return inserted
 
 
 @app.route('/add', methods=['POST'])
