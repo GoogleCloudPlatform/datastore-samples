@@ -20,13 +20,13 @@ scaffolding for other python frameworks and use cases.
 1. Clone this repo.
 
    ```
-   git clone https://github.com/GoogleCloudPlatform/datastore-pthon-samples.git
-   cd datastore-python-samples/ndb-overview
+   git clone https://github.com/GoogleCloudPlatform/datastore-samples.git
+   cd datastore-samples/python/ndb/overview
    ```
 1. Run this project locally from the command line.
 
    ```
-   gcloud preview app run ./
+   gcloud preview app run app.yaml
    ```
 
 1. Visit the application at [http://localhost:8080](http://localhost:8080).
@@ -43,7 +43,7 @@ scaffolding for other python frameworks and use cases.
 1. Use gcloud to deploy your app.
 
    ```
-   gcloud preview app deploy ./
+   gcloud preview app deploy app.yaml
    ```
 
 1. Congratulations!  Your application is now live at your-app-id.appspot.com
